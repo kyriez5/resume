@@ -563,11 +563,20 @@
     <script>
         // === Keyword Auto-Highlight ===
         (function() {
+            // Sort by length descending so longer keywords (e.g. "STM32")
+            // are processed before substrings (e.g. "STM"), reducing the
+            // risk of nested <strong> tags. The regex below assumes
+            // keywords are NOT substrings of one another; if a keyword is
+            // a substring of another, the shorter one may still match
+            // inside the <strong> tag of the longer one, corrupting HTML.
+            // The negative lookahead (?![^<]*>) prevents matching inside
+            // raw HTML tags (<tag>…</tag>) but not inside previously
+            // injected <strong> wrappers.
             var KEYWORDS = [
                 'STM32', 'MSPM0', 'PID', 'OpenMV', 'Python',
                 'Keil5', 'CubeMX', 'IIC', 'USART', 'SPI', 'C51',
                 'TI', 'ARM', '单片机', '嵌入式'
-            ];
+            ].sort(function(a, b) { return b.length - a.length; });
 
             var descEls = document.querySelectorAll('.project-desc');
             descEls.forEach(function(el) {
@@ -581,18 +590,6 @@
             });
         })();
 
-        // === Photo Fallback (belt-and-suspenders) ===
-        document.addEventListener('DOMContentLoaded', function() {
-            var avatar = document.querySelector('.avatar');
-            var fallback = document.querySelector('.avatar-fallback');
-            if (avatar && fallback && !avatar.complete) {
-                // img hasn't loaded yet — onerror will handle
-            }
-            if (avatar && fallback && avatar.naturalWidth === 0 && avatar.complete) {
-                avatar.style.display = 'none';
-                fallback.style.display = 'flex';
-            }
-        });
     </script>
 </body>
 </html>
