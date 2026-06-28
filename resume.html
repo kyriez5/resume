@@ -559,7 +559,38 @@
     </footer>
 
     <script>
-        // JS placeholder — Task 6 填充
+        // === Keyword Auto-Highlight ===
+        (function() {
+            var KEYWORDS = [
+                'STM32', 'MSPM0', 'PID', 'OpenMV', 'Python',
+                'Keil5', 'CubeMX', 'IIC', 'USART', 'SPI', 'C51',
+                'TI', 'ARM', '单片机', '嵌入式'
+            ];
+
+            var descEls = document.querySelectorAll('.project-desc');
+            descEls.forEach(function(el) {
+                var html = el.innerHTML;
+                KEYWORDS.forEach(function(kw) {
+                    // 匹配不在 HTML 标签内的关键词，用 word boundary
+                    var pattern = new RegExp('(?!<[^>]*)(' + kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')(?![^<]*>)', 'gi');
+                    html = html.replace(pattern, '<strong>$1</strong>');
+                });
+                el.innerHTML = html;
+            });
+        })();
+
+        // === Photo Fallback (belt-and-suspenders) ===
+        document.addEventListener('DOMContentLoaded', function() {
+            var avatar = document.querySelector('.avatar');
+            var fallback = document.querySelector('.avatar-fallback');
+            if (avatar && fallback && !avatar.complete) {
+                // img hasn't loaded yet — onerror will handle
+            }
+            if (avatar && fallback && avatar.naturalWidth === 0 && avatar.complete) {
+                avatar.style.display = 'none';
+                fallback.style.display = 'flex';
+            }
+        });
     </script>
 </body>
 </html>
