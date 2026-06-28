@@ -246,6 +246,77 @@
             color: #a0a0b8;
         }
 
+        .skill-line .level-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .level-dot.master { background: #b499e8; box-shadow: 0 0 6px rgba(180, 153, 232, 0.5); }
+        .level-dot.skilled { background: #7b9fd4; box-shadow: 0 0 5px rgba(123, 159, 212, 0.4); }
+        .level-dot.pass { background: #8a8aa0; }
+        .level-dot.have { background: #8a8aa0; }
+
+        /* === Skill Tag with Level === */
+        .tag-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .tag-level .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .tag-level .dot.master { background: #b499e8; box-shadow: 0 0 6px rgba(180, 153, 232, 0.6); }
+        .tag-level .dot.skilled { background: #7b9fd4; box-shadow: 0 0 4px rgba(123, 159, 212, 0.4); }
+        .tag-level .dot.familiar { background: #7a7a95; }
+
+        .tag-level:hover::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 6, 22, 0.92);
+            color: #b499e8;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+            border: 1px solid rgba(130, 100, 220, 0.3);
+        }
+
+        .skill-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: #7a7a95;
+        }
+
+        .skill-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .skill-legend .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
         /* === Competitions === */
         .comp-entry {
             display: flex;
@@ -492,32 +563,38 @@
             <h2>技能证书</h2>
         </div>
         <div class="module-body">
+            <div class="skill-legend">
+                <span><span class="dot" style="background:#b499e8;box-shadow:0 0 6px rgba(180,153,232,0.5);"></span> 精通</span>
+                <span><span class="dot" style="background:#7b9fd4;box-shadow:0 0 4px rgba(123,159,212,0.4);"></span> 熟练</span>
+                <span><span class="dot" style="background:#7a7a95;"></span> 了解</span>
+            </div>
             <div class="skill-category">
                 <h3>🔧 嵌入式硬件</h3>
                 <div class="skill-tags">
-                    <span class="tag tag-hardware">STM32F4/F7/G4/H7</span>
-                    <span class="tag tag-hardware">C51</span>
-                    <span class="tag tag-hardware">TI MSPM0</span>
-                    <span class="tag tag-hardware">Keil5</span>
-                    <span class="tag tag-hardware">CubeMX</span>
-                    <span class="tag tag-hardware">IIC</span>
-                    <span class="tag tag-hardware">USART</span>
-                    <span class="tag tag-hardware">SPI</span>
-                    <span class="tag tag-hardware">示波器</span>
-                    <span class="tag tag-hardware">万用表</span>
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>STM32F4/F7/G4/H7</span>
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>Keil5</span>
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>CubeMX</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>C51</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>TI MSPM0</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>IIC</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>USART</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>SPI</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>示波器</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>万用表</span>
                 </div>
             </div>
             <div class="skill-category">
                 <h3>🌐 语言证书</h3>
-                <p class="skill-line">大学英语四级 · 大学英语六级</p>
+                <p class="skill-line"><span class="level-dot pass"></span>大学英语四级 (CET-4) · 通过</p>
+                <p class="skill-line"><span class="level-dot pass"></span>大学英语六级 (CET-6) · 通过</p>
             </div>
             <div class="skill-category">
                 <h3>📋 办公技能</h3>
-                <p class="skill-line">Word · Excel · PPT</p>
+                <p class="skill-line"><span class="level-dot skilled"></span>熟练使用 Word · Excel · PPT 全套Office办公软件</p>
             </div>
             <div class="skill-category">
                 <h3>🚗 通用证书</h3>
-                <p class="skill-line">C1驾驶证</p>
+                <p class="skill-line"><span class="level-dot have"></span>C1驾驶证 · 具备</p>
             </div>
         </div>
     </section>
