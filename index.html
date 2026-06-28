@@ -1,0 +1,795 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赵英琦 — 嵌入式开发工程师</title>
+    <style>
+        /* === Reset & Global === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background-color: #0d1117;
+            color: #d0d0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* === Particle Background Canvas === */
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        /* === Code Decorations === */
+        .code-decoration {
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            color: #8b7fca;
+            font-size: 13px;
+        }
+
+        .top-decoration {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        /* === Module Shared === */
+        .module {
+            background: rgba(20, 14, 40, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(130, 100, 220, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(130, 100, 220, 0.08);
+            margin-bottom: 24px;
+            padding: 28px 32px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .module-bar {
+            width: 3px;
+            height: 22px;
+            background: #9b7fd4;
+            border-radius: 2px;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(155, 127, 212, 0.4);
+        }
+
+        .module-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #b499e8;
+        }
+
+        .module-body {
+            padding-left: 15px;
+        }
+
+        /* === Header === */
+        .header {
+            background: rgba(20, 14, 40, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(130, 100, 220, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(130, 100, 220, 0.08);
+            padding: 36px 32px 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #9b7fd4;
+            box-shadow: 0 0 16px rgba(155, 127, 212, 0.3);
+            display: block;
+        }
+
+        .avatar-fallback {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #9b7fd4;
+            color: #fff;
+            font-size: 42px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #b499e8;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #9a9ab0;
+            margin-bottom: 12px;
+        }
+
+        .contact-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: #a0a0b8;
+        }
+
+        .contact-bar span {
+            white-space: nowrap;
+        }
+
+        /* === Education === */
+        .edu-meta {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .edu-school {
+            font-size: 17px;
+            font-weight: 700;
+            color: #d0d0e0;
+        }
+
+        .edu-major {
+            font-size: 15px;
+            color: #a0a0b8;
+        }
+
+        .edu-gpa {
+            font-size: 15px;
+            font-weight: 700;
+            color: #b499e8;
+        }
+
+        .edu-time {
+            font-size: 13px;
+            color: #7a7a95;
+            margin-bottom: 14px;
+        }
+
+        .course-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(130, 100, 220, 0.18);
+            color: #b499e8;
+            border: 1px solid rgba(130, 100, 220, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* === Skills === */
+        .skill-category {
+            margin-bottom: 14px;
+        }
+
+        .skill-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .skill-category h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #d0d0e0;
+            margin-bottom: 8px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-hardware {
+            background: rgba(130, 100, 220, 0.18);
+            color: #b499e8;
+            border: 1px solid rgba(130, 100, 220, 0.3);
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 12px;
+        }
+
+        .skill-line {
+            font-size: 14px;
+            color: #a0a0b8;
+        }
+
+        .skill-line .level-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .level-dot.master { background: #b499e8; box-shadow: 0 0 6px rgba(180, 153, 232, 0.5); }
+        .level-dot.skilled { background: #7b9fd4; box-shadow: 0 0 5px rgba(123, 159, 212, 0.4); }
+        .level-dot.pass { background: #8a8aa0; }
+        .level-dot.have { background: #8a8aa0; }
+
+        /* === Skill Tag with Level === */
+        .tag-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .tag-level .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .tag-level .dot.master { background: #b499e8; box-shadow: 0 0 6px rgba(180, 153, 232, 0.6); }
+        .tag-level .dot.skilled { background: #7b9fd4; box-shadow: 0 0 4px rgba(123, 159, 212, 0.4); }
+        .tag-level .dot.familiar { background: #7a7a95; }
+
+        .tag-level:hover::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 6, 22, 0.92);
+            color: #b499e8;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+            border: 1px solid rgba(130, 100, 220, 0.3);
+        }
+
+        .skill-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: #7a7a95;
+        }
+
+        .skill-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .skill-legend .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        /* === Competitions === */
+        .comp-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .comp-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .comp-medal {
+            font-size: 28px;
+            flex-shrink: 0;
+            line-height: 1.3;
+        }
+
+        .comp-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d0d0e0;
+            margin-bottom: 2px;
+        }
+
+        .comp-detail {
+            font-size: 13px;
+            color: #8a8aa0;
+        }
+
+        /* === Projects === */
+        .project-card {
+            background: rgba(30, 22, 55, 0.55);
+            border: 1px solid rgba(130, 100, 220, 0.2);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .project-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #d0d0e0;
+            margin-bottom: 4px;
+        }
+
+        .project-role {
+            font-size: 13px;
+            color: #8a8aa0;
+            margin-bottom: 12px;
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: #b8b8cc;
+            line-height: 1.8;
+        }
+
+        .project-desc strong {
+            color: #b499e8;
+            font-weight: 700;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 13px;
+            background: rgba(130, 100, 220, 0.2);
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+
+        /* === About === */
+        .about-text {
+            font-size: 15px;
+            color: #b8b8cc;
+            line-height: 1.9;
+        }
+
+        /* === Footer === */
+        .footer {
+            text-align: center;
+            padding: 12px 0 32px;
+        }
+
+        .footer-decoration {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 12px;
+            }
+
+            .header {
+                padding: 28px 20px 12px;
+            }
+
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .avatar, .avatar-fallback {
+                width: 96px;
+                height: 96px;
+            }
+
+            .contact-bar {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .name {
+                font-size: 24px;
+            }
+
+            .module {
+                padding: 20px;
+                margin-bottom: 16px;
+            }
+
+            .module-body {
+                padding-left: 0;
+            }
+
+            .edu-meta {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .course-tags .tag {
+                font-size: 12px;
+                padding: 3px 10px;
+            }
+
+            .project-card {
+                padding: 16px;
+            }
+
+            .top-decoration {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .name {
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .contact-bar {
+                font-size: 13px;
+                gap: 6px;
+            }
+
+            .module {
+                padding: 16px;
+            }
+
+            .module-header h2 {
+                font-size: 16px;
+            }
+
+            .comp-medal {
+                font-size: 24px;
+            }
+
+            .project-card h3 {
+                font-size: 15px;
+            }
+
+            .project-desc {
+                font-size: 13px;
+            }
+
+            .skill-tags .tag {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+
+            .course-tags {
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particle-bg"></canvas>
+    <div class="container">
+    <header class="header">
+        <div class="header-inner">
+            <div class="avatar-container">
+                <img class="avatar" src="assets/photo.jpg" alt="赵英琦" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="avatar-fallback" style="display:none;">赵</div>
+            </div>
+            <div class="header-text">
+                <h1 class="name">赵英琦</h1>
+                <p class="subtitle">嵌入式开发 · 机器人工程</p>
+                <div class="contact-bar">
+                    <span>📞 18108518572</span>
+                    <span>✉ 2019855865@qq.com</span>
+                    <span>📍 山东省青岛市黄岛区</span>
+                </div>
+            </div>
+        </div>
+        <div class="code-decoration top-decoration">// aspiring embedded engineer</div>
+    </header>
+
+    <section class="module" id="education">
+        <div class="module-header">
+            <div class="module-bar"></div>
+            <h2>教育经历</h2>
+        </div>
+        <div class="module-body">
+            <div class="edu-meta">
+                <span class="edu-school">青岛理工大学</span>
+                <span class="edu-major">机器人工程 本科</span>
+                <span class="edu-gpa">GPA 3.8</span>
+            </div>
+            <p class="edu-time">2023/09 - 至今</p>
+            <div class="course-tags">
+                <span class="tag">C语言程序设计</span>
+                <span class="tag">电路原理</span>
+                <span class="tag">模拟与数字电路</span>
+                <span class="tag">微型计算机系统</span>
+                <span class="tag">Linux操作系统</span>
+                <span class="tag">电力电子技术</span>
+                <span class="tag">自动控制原理</span>
+                <span class="tag">现代控制理论</span>
+                <span class="tag">机器人检测技术</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="module" id="skills">
+        <div class="module-header">
+            <div class="module-bar"></div>
+            <h2>技能证书</h2>
+        </div>
+        <div class="module-body">
+            <div class="skill-legend">
+                <span><span class="dot" style="background:#b499e8;box-shadow:0 0 6px rgba(180,153,232,0.5);"></span> 精通</span>
+                <span><span class="dot" style="background:#7b9fd4;box-shadow:0 0 4px rgba(123,159,212,0.4);"></span> 熟练</span>
+                <span><span class="dot" style="background:#7a7a95;"></span> 了解</span>
+            </div>
+            <div class="skill-category">
+                <h3>🔧 嵌入式硬件</h3>
+                <div class="skill-tags">
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>STM32F4/F7/G4/H7</span>
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>Keil5</span>
+                    <span class="tag tag-hardware tag-level" data-label="精通"><span class="dot master"></span>CubeMX</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>C51</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>TI MSPM0</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>IIC</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>USART</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>SPI</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>示波器</span>
+                    <span class="tag tag-hardware tag-level" data-label="熟练"><span class="dot skilled"></span>万用表</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>🌐 语言证书</h3>
+                <p class="skill-line"><span class="level-dot pass"></span>大学英语四级 (CET-4) · 通过</p>
+                <p class="skill-line"><span class="level-dot pass"></span>大学英语六级 (CET-6) · 通过</p>
+            </div>
+            <div class="skill-category">
+                <h3>📋 办公技能</h3>
+                <p class="skill-line"><span class="level-dot skilled"></span>熟练使用 Word · Excel · PPT 全套Office办公软件</p>
+            </div>
+            <div class="skill-category">
+                <h3>🚗 通用证书</h3>
+                <p class="skill-line"><span class="level-dot have"></span>C1驾驶证 · 具备</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="module" id="competitions">
+        <div class="module-header">
+            <div class="module-bar"></div>
+            <h2>竞赛荣誉</h2>
+        </div>
+        <div class="module-body">
+            <div class="comp-entry">
+                <span class="comp-medal">🥉</span>
+                <div>
+                    <p class="comp-name">全国大学生电子设计竞赛</p>
+                    <p class="comp-detail">山东赛区三等奖 · 2025/07 - 2025/08</p>
+                </div>
+            </div>
+            <div class="comp-entry">
+                <span class="comp-medal">🥈</span>
+                <div>
+                    <p class="comp-name">青岛理工大学第二届电子设计竞赛</p>
+                    <p class="comp-detail">二等奖 · 2024/10 - 2024/12</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="module" id="projects">
+        <div class="module-header">
+            <div class="module-bar"></div>
+            <h2>项目经历</h2>
+        </div>
+        <div class="module-body">
+            <div class="project-card">
+                <h3>📁 简易自行瞄准装置</h3>
+                <p class="project-role">视觉模块和算法调试负责人 · 2025/07 - 2025/08</p>
+                <p class="project-desc">
+                    基于 TI MSPM0 单片机设计并实现自动寻迹与激光瞄准系统；本人全权负责视觉识别模块开发，采用 OpenMV + Python 完成靶心检测、坐标提取与串口数据传输；参与小车循迹 PID 控制算法调试与参数整定；协助完成硬件搭建、双电源独立供电电路设计与整机系统联调；成品实现激光精准瞄准靶心，光斑直径 ≤0.5cm，全部达到赛事设计指标。
+                </p>
+            </div>
+            <div class="project-card">
+                <h3>📁 基于图像识别技术的光点运动轨迹控制系统</h3>
+                <p class="project-role">控制系统开发和算法负责人 · 2024/10 - 2024/12</p>
+                <p class="project-desc">
+                    基于 STM32 单片机制作激光光点二维控制装置，可在1米距离、50cm×50cm靶纸上完成激光光点精准定位与自定义轨迹运动；本人负责主程序逻辑开发、PID 闭环控制算法编写与调参优化，保障光点定位精度与轨迹平滑跟踪效果满足全部设计指标。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="module" id="about">
+        <div class="module-header">
+            <div class="module-bar"></div>
+            <h2>自我评价</h2>
+        </div>
+        <div class="module-body">
+            <p class="about-text">
+                学习态度端正，动手实践能力突出，深耕嵌入式开发与运动控制算法，具备完整电子竞赛落地项目经验；做事踏实严谨，逻辑思维清晰，编程功底扎实，拥有优秀团队协作与工程实操落地能力；英语读写口语流畅，可无障碍和外籍人士沟通交流。
+            </p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="code-decoration footer-decoration">/* 2026 · 赵英琦 · embedded &amp; robotics */</div>
+    </footer>
+    </div>
+
+    <script>
+        // === Particle Network Background ===
+        (function() {
+            var canvas = document.getElementById('particle-bg');
+            var ctx = canvas.getContext('2d');
+            var particles = [];
+            var PARTICLE_COUNT = 60;
+            var MAX_DIST = 140;
+            var MOUSE_RADIUS = 180;
+
+            var mouse = { x: -1000, y: -1000 };
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            document.addEventListener('mousemove', function(e) {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            function Particle() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 1.8 + 0.8;
+            }
+
+            Particle.prototype.update = function() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            };
+
+            Particle.prototype.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(26, 111, 196, 0.55)';
+                ctx.fill();
+            };
+
+            for (var i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function drawLine(a, b, opacity) {
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.strokeStyle = 'rgba(26, 111, 196, ' + opacity + ')';
+                ctx.lineWidth = 0.6;
+                ctx.stroke();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (var i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+
+                    // Mouse interaction — glow near cursor
+                    var dm = Math.hypot(particles[i].x - mouse.x, particles[i].y - mouse.y);
+                    if (dm < MOUSE_RADIUS) {
+                        var glowOpacity = (1 - dm / MOUSE_RADIUS) * 0.3;
+                        ctx.beginPath();
+                        ctx.arc(particles[i].x, particles[i].y, particles[i].radius * 2.5, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(26, 111, 196, ' + glowOpacity + ')';
+                        ctx.fill();
+                    }
+                }
+
+                // Draw connection lines between nearby particles
+                for (var i = 0; i < particles.length; i++) {
+                    for (var j = i + 1; j < particles.length; j++) {
+                        var dx = particles[i].x - particles[j].x;
+                        var dy = particles[i].y - particles[j].y;
+                        var dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < MAX_DIST) {
+                            var opacity = (1 - dist / MAX_DIST) * 0.18;
+                            drawLine(particles[i], particles[j], opacity);
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+
+        // === Keyword Auto-Highlight ===
+        (function() {
+            // Sort by length descending so longer keywords (e.g. "STM32")
+            // are processed before substrings (e.g. "STM"), reducing the
+            // risk of nested <strong> tags. The regex below assumes
+            // keywords are NOT substrings of one another; if a keyword is
+            // a substring of another, the shorter one may still match
+            // inside the <strong> tag of the longer one, corrupting HTML.
+            // The negative lookahead (?![^<]*>) prevents matching inside
+            // raw HTML tags (<tag>…</tag>) but not inside previously
+            // injected <strong> wrappers.
+            var KEYWORDS = [
+                'STM32', 'MSPM0', 'PID', 'OpenMV', 'Python',
+                'Keil5', 'CubeMX', 'IIC', 'USART', 'SPI', 'C51',
+                'TI', 'ARM', '单片机', '嵌入式'
+            ].sort(function(a, b) { return b.length - a.length; });
+
+            var descEls = document.querySelectorAll('.project-desc');
+            descEls.forEach(function(el) {
+                var html = el.innerHTML;
+                KEYWORDS.forEach(function(kw) {
+                    // 匹配不在 HTML 标签内的关键词，用 word boundary
+                    var pattern = new RegExp('(?!<[^>]*)(' + kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')(?![^<]*>)', 'gi');
+                    html = html.replace(pattern, '<strong>$1</strong>');
+                });
+                el.innerHTML = html;
+            });
+        })();
+
+    </script>
+</body>
+</html>
