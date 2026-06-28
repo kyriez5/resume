@@ -5,7 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>赵英琦 — 嵌入式开发工程师</title>
     <style>
-        /* CSS placeholder — Task 4-5 填充 */
+        /* === Reset & Global === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background-color: #f5f6fa;
+            color: #2d3436;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        /* === Code Decorations === */
+        .code-decoration {
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            color: #6a9955;
+            font-size: 13px;
+        }
+
+        .top-decoration {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        /* === Module Shared === */
+        .module {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+            padding: 28px 32px;
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .module-bar {
+            width: 3px;
+            height: 22px;
+            background: #1a6fc4;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .module-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a6fc4;
+        }
+
+        .module-body {
+            padding-left: 15px;
+        }
+
+        /* === Header === */
+        .header {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            padding: 36px 32px 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1a6fc4;
+            display: block;
+        }
+
+        .avatar-fallback {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #1a6fc4;
+            color: #fff;
+            font-size: 42px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a6fc4;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #636e72;
+            margin-bottom: 12px;
+        }
+
+        .contact-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .contact-bar span {
+            white-space: nowrap;
+        }
+
+        /* === Education === */
+        .edu-meta {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .edu-school {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+        .edu-major {
+            font-size: 15px;
+            color: #555;
+        }
+
+        .edu-gpa {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a6fc4;
+        }
+
+        .edu-time {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 14px;
+        }
+
+        .course-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #1a6fc4;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
