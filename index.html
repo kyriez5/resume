@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0e13">
     <meta name="description" content="赵英琦 — 嵌入式开发工程师。青岛理工大学机器人工程本科，专注 STM32 / MSPM0 底层驱动、PID 运动控制与 ESP32 端云语音系统开发。">
     <title>赵英琦 · 嵌入式开发工程师</title>
     <style>
         :root {
-            --paper: #f7f2e9;
-            --paper-2: #efe8da;
-            --ink: #24201a;
-            --ink-2: #5a5344;
-            --ink-3: #8a8270;
-            --line: #e0d7c4;
-            --accent: #b03a2e;
-            --accent-ink: #8f2d24;
-            --accent-soft: #f3e3db;
-            --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
-            --sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            --bg: #0a0e13;
+            --panel: #10151c;
+            --panel-2: #121820;
+            --border: rgba(148, 163, 184, 0.12);
+            --border-strong: rgba(148, 163, 184, 0.22);
+            --text: #e6edf3;
+            --text-2: #9aa7b4;
+            --text-3: #5f6a75;
+            --accent: #3ecf8e;
+            --accent-dim: rgba(62, 207, 142, 0.14);
+            --amber: #e8a23d;
+            --mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, "Courier New", monospace;
+            --sans: -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
             --nav-h: 60px;
         }
 
@@ -25,35 +28,50 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--sans);
-            background: var(--paper);
-            color: var(--ink);
-            line-height: 1.8;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         a { color: inherit; text-decoration: none; }
-        ::selection { background: var(--accent-soft); color: var(--accent-ink); }
+        ::selection { background: var(--accent-dim); color: var(--accent); }
 
-        .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
-        section { scroll-margin-top: calc(var(--nav-h) + 16px); padding: 64px 0 8px; }
+        /* ---------- Background ---------- */
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+        .bg-glow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background: radial-gradient(ellipse 70% 50% at 50% -8%, rgba(62, 207, 142, 0.09), transparent 60%);
+        }
+
+        .wrap { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; padding: 0 24px; }
+        section { scroll-margin-top: calc(var(--nav-h) + 16px); padding: 68px 0 8px; }
 
         /* ---------- Nav ---------- */
         .nav {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(247, 242, 233, 0.94);
-            backdrop-filter: blur(6px);
-            border-bottom: 1px solid var(--line);
+            background: rgba(10, 14, 19, 0.82);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
         }
         .nav-inner {
-            max-width: 780px; margin: 0 auto; padding: 0 24px;
+            max-width: 880px; margin: 0 auto; padding: 0 24px;
             height: var(--nav-h); display: flex; align-items: center; justify-content: space-between;
         }
-        .nav-name { font-family: var(--serif); font-weight: 700; font-size: 17px; letter-spacing: 0.02em; }
-        .nav-links { display: flex; gap: 22px; list-style: none; }
+        .nav-logo { font-family: var(--mono); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .nav-logo .led { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(62, 207, 142, 0.8); }
+        .nav-links { display: flex; gap: 26px; list-style: none; }
         .nav-links a {
-            font-size: 14px; color: var(--ink-2); position: relative; padding: 4px 0;
-            transition: color .15s;
+            font-family: var(--mono); font-size: 13px; color: var(--text-2);
+            padding: 4px 0; position: relative; transition: color .15s;
         }
-        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover { color: var(--text); }
         .nav-links a.active { color: var(--accent); }
         .nav-links a.active::after {
             content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
@@ -61,139 +79,206 @@
         }
         .nav-burger {
             display: none; width: 40px; height: 40px; cursor: pointer;
-            background: none; border: 1px solid var(--line); border-radius: 4px;
+            background: none; border: 1px solid var(--border); border-radius: 6px;
             flex-direction: column; align-items: center; justify-content: center; gap: 5px;
         }
-        .nav-burger span { display: block; width: 18px; height: 2px; background: var(--ink); }
+        .nav-burger span { display: block; width: 18px; height: 2px; background: var(--text); }
         .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .nav-burger.open span:nth-child(2) { opacity: 0; }
         .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ---------- Masthead ---------- */
-        .masthead { padding: 72px 0 56px; }
-        .masthead-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
-        .eyebrow { font-size: 13px; letter-spacing: 0.14em; color: var(--ink-3); margin-bottom: 18px; }
-        .name { font-family: var(--serif); font-size: 52px; font-weight: 700; line-height: 1.15; letter-spacing: 0.02em; }
-        .role { font-size: 18px; color: var(--ink-2); margin-top: 10px; }
-        .tagline { font-size: 15px; color: var(--ink-2); margin-top: 20px; max-width: 520px; }
-        .contact-line { margin-top: 26px; font-size: 14px; color: var(--ink-3); }
-        .contact-line a { border-bottom: 1px solid var(--line); transition: color .15s, border-color .15s; }
-        .contact-line a:hover { color: var(--accent); border-color: var(--accent); }
-        .contact-line .sep { margin: 0 12px; color: var(--line); }
-
-        .portrait { flex-shrink: 0; }
-        .portrait img {
-            width: 104px; height: 104px; object-fit: cover; display: block;
-            border: 1px solid var(--line); border-radius: 3px;
-            filter: grayscale(0.25);
-        }
-        .portrait .monogram {
-            width: 104px; height: 104px; display: none;
-            align-items: center; justify-content: center;
-            font-family: var(--serif); font-size: 40px; color: var(--ink-3);
-            border: 1px solid var(--line); border-radius: 3px; background: var(--paper-2);
-        }
-
         /* ---------- Section head ---------- */
-        .section-head { margin-bottom: 30px; }
-        .section-head h2 { font-family: var(--serif); font-size: 26px; font-weight: 700; letter-spacing: 0.01em; }
-        .section-head .rule { width: 34px; height: 2px; background: var(--accent); margin-top: 14px; }
+        .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 34px; }
+        .section-head .no { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+        .section-head h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+        .section-head .line { flex: 1; height: 1px; background: var(--border); }
+
+        /* ---------- Hero ---------- */
+        .hero { padding: 72px 0 40px; }
+        .hero-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; }
+        .hero-main { flex: 1 1 0; min-width: 0; }
+        .eyebrow { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 20px; }
+        .name { font-size: clamp(40px, 6vw, 58px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+        .role { font-size: 19px; color: var(--text-2); margin-top: 12px; }
+        .tagline { font-size: 15px; color: var(--text-2); margin-top: 20px; max-width: 520px; }
+        .contact-line { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px 26px; }
+        .contact-line a {
+            font-family: var(--mono); font-size: 13px; color: var(--text-2);
+            display: inline-flex; align-items: center; gap: 8px; transition: color .15s;
+        }
+        .contact-line a:hover { color: var(--accent); }
+        .contact-line a .k { color: var(--text-3); }
+
+        /* Nameplate */
+        .nameplate {
+            flex-shrink: 0; width: 230px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--panel); overflow: hidden;
+        }
+        .nameplate .np-top {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; border-bottom: 1px solid var(--border);
+        }
+        .nameplate .np-top .dots { display: flex; gap: 5px; }
+        .nameplate .np-top .dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(148,163,184,0.2); }
+        .nameplate .np-top .dots i:first-child { background: var(--accent); opacity: 0.7; }
+        .nameplate .np-top .np-id { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+        .nameplate .np-body { padding: 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .nameplate .np-body img {
+            width: 92px; height: 92px; object-fit: cover; display: block;
+            border: 1px solid var(--border-strong); border-radius: 6px; margin-bottom: 14px;
+            filter: grayscale(0.2);
+        }
+        .nameplate .np-body .monogram {
+            width: 92px; height: 92px; display: none; align-items: center; justify-content: center;
+            font-size: 34px; color: var(--text-3); border: 1px solid var(--border-strong);
+            border-radius: 6px; margin-bottom: 14px; background: var(--panel-2);
+        }
+        .nameplate .np-name { font-size: 17px; font-weight: 700; }
+        .nameplate .np-role { font-family: var(--mono); font-size: 12px; color: var(--text-2); margin-top: 6px; }
+        .nameplate .np-status {
+            margin-top: 14px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
+            font-family: var(--mono); font-size: 11.5px; color: var(--text-3);
+            border-top: 1px solid var(--border); padding-top: 12px;
+        }
+        .nameplate .np-status .led { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 7px rgba(62,207,142,0.9); }
+
+        /* Waveform divider */
+        .wave-divider { margin: 16px 0 8px; }
+        .wave-divider svg { display: block; width: 100%; height: 34px; }
 
         /* ---------- About ---------- */
-        .about-text { font-size: 15.5px; color: var(--ink-2); max-width: 680px; }
+        .about-text { font-size: 15.5px; color: var(--text-2); max-width: 720px; }
+        .about-meta { margin-top: 26px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .meta-cell { border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; background: var(--panel); }
+        .meta-cell .m-k { font-family: var(--mono); font-size: 11.5px; color: var(--text-3); margin-bottom: 8px; }
+        .meta-cell .m-v { font-size: 14.5px; color: var(--text); }
 
         /* ---------- Education ---------- */
-        .edu-card { border: 1px solid var(--line); border-radius: 6px; padding: 26px 28px; background: rgba(255,255,255,0.35); }
+        .edu-card { border: 1px solid var(--border); border-radius: 10px; padding: 26px 28px; background: var(--panel); }
         .edu-top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; }
-        .edu-school { font-family: var(--serif); font-size: 20px; font-weight: 700; }
-        .edu-major { font-size: 15px; color: var(--ink-2); margin-top: 2px; }
-        .edu-time { font-size: 13px; color: var(--ink-3); }
-        .edu-courses { margin-top: 20px; }
-        .edu-courses .sub { font-size: 13px; color: var(--ink-3); margin-bottom: 10px; }
+        .edu-school { font-size: 20px; font-weight: 700; }
+        .edu-major { font-size: 14.5px; color: var(--text-2); margin-top: 2px; }
+        .edu-time { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+        .edu-courses { margin-top: 22px; }
+        .edu-courses .sub { font-family: var(--mono); font-size: 11.5px; color: var(--text-3); margin-bottom: 12px; }
 
         /* ---------- Tags ---------- */
         .tags { display: flex; flex-wrap: wrap; gap: 8px; }
         .tag {
-            font-size: 13px; color: var(--ink-2); padding: 5px 12px;
-            border: 1px solid var(--line); border-radius: 100px; background: rgba(255,255,255,0.35);
-            transition: border-color .15s, color .15s;
+            font-family: var(--mono); font-size: 12.5px; color: var(--text-2);
+            padding: 5px 12px; border: 1px solid var(--border); border-radius: 5px;
+            background: rgba(255, 255, 255, 0.02); transition: border-color .15s, color .15s;
         }
-        .tag:hover { border-color: var(--accent); color: var(--accent-ink); }
+        .tag:hover { border-color: var(--accent); color: var(--accent); }
 
         /* ---------- Skills ---------- */
-        .skill-block p { font-size: 15px; color: var(--ink-2); max-width: 720px; }
+        .skill-block p { font-size: 15px; color: var(--text-2); max-width: 760px; }
         .skill-block p + p { margin-top: 14px; }
-        .skill-block b { color: var(--ink); font-weight: 600; }
-        .skill-tags { margin-top: 26px; }
-        .certs { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .skill-block b { color: var(--text); font-weight: 600; }
+        .skill-groups { margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .skill-group { border: 1px solid var(--border); border-radius: 10px; background: var(--panel); padding: 20px; }
+        .skill-group h3 { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .skill-group h3 .led { width: 7px; height: 7px; border-radius: 50%; }
+        .led.green { background: var(--accent); box-shadow: 0 0 7px rgba(62, 207, 142, 0.8); }
+        .led.amber { background: var(--amber); box-shadow: 0 0 7px rgba(232, 162, 61, 0.7); }
+        .led.gray { background: var(--text-3); }
+        .skill-group h3 .g-cn { color: var(--text); }
+        .skill-group .items { display: flex; flex-wrap: wrap; gap: 7px; }
+        .skill-group .items span {
+            font-family: var(--mono); font-size: 12px; color: var(--text-2);
+            padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;
+        }
+        .certs { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; }
         .cert {
             display: inline-flex; align-items: center; gap: 8px;
-            font-size: 14px; color: var(--ink-2); padding: 8px 16px;
-            border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,0.35);
+            font-family: var(--mono); font-size: 12.5px; color: var(--text-2);
+            padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--panel);
         }
         .cert::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
         /* ---------- Projects ---------- */
-        .project { padding: 26px 0; border-bottom: 1px solid var(--line); }
-        .project:first-of-type { padding-top: 0; }
-        .project:last-child { border-bottom: none; padding-bottom: 0; }
-        .project-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-bottom: 14px; }
-        .project-head h3 { font-family: var(--serif); font-size: 19px; font-weight: 700; }
-        .project-role { font-size: 14px; color: var(--accent); }
-        .project-time { font-size: 13px; color: var(--ink-3); margin-left: auto; }
+        .project {
+            border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
+            padding: 26px 28px; margin-bottom: 18px; position: relative; overflow: hidden;
+        }
+        .project::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+        .project:last-child { margin-bottom: 0; }
+        .project-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 14px; }
+        .project-head h3 { font-size: 18px; font-weight: 700; }
+        .project-role { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+        .project-time { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-left: auto; }
         .project-points { list-style: none; margin-bottom: 16px; }
-        .project-points li {
-            font-size: 14.5px; color: var(--ink-2); position: relative;
-            padding-left: 20px; margin-bottom: 8px;
-        }
-        .project-points li::before {
-            content: '—'; position: absolute; left: 0; color: var(--ink-3);
-        }
+        .project-points li { font-size: 14.5px; color: var(--text-2); position: relative; padding-left: 18px; margin-bottom: 7px; }
+        .project-points li::before { content: '▸'; position: absolute; left: 0; color: var(--text-3); font-size: 12px; line-height: 1.9; }
+        .project-points li:last-child { margin-bottom: 0; }
 
         /* ---------- Competitions ---------- */
-        .comp-entry { display: flex; gap: 18px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--line); }
-        .comp-entry:last-child { border-bottom: none; }
-        .comp-award { font-family: var(--serif); font-size: 17px; color: var(--accent-ink); white-space: nowrap; font-weight: 700; }
-        .comp-name { font-family: var(--serif); font-size: 17px; font-weight: 700; }
-        .comp-detail { font-size: 13.5px; color: var(--ink-3); margin-top: 2px; }
+        .comp-entry {
+            display: flex; gap: 20px; align-items: flex-start;
+            border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
+            padding: 20px 24px; margin-bottom: 14px;
+        }
+        .comp-entry:last-child { margin-bottom: 0; }
+        .comp-award {
+            font-family: var(--mono); font-size: 12px; color: var(--accent);
+            border: 1px solid var(--accent-dim); background: var(--accent-dim);
+            padding: 4px 12px; border-radius: 5px; white-space: nowrap;
+        }
+        .comp-name { font-size: 16.5px; font-weight: 700; }
+        .comp-detail { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-top: 3px; }
 
         /* ---------- Contact ---------- */
-        .contact-items { display: flex; flex-wrap: wrap; gap: 18px 40px; }
-        .contact-item { font-size: 15px; color: var(--ink-2); }
-        .contact-item b { display: block; font-size: 13px; color: var(--ink-3); font-weight: 500; margin-bottom: 2px; }
-        .contact-item a { border-bottom: 1px solid var(--line); transition: color .15s, border-color .15s; }
-        .contact-item a:hover { color: var(--accent); border-color: var(--accent); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .contact-item {
+            border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
+            padding: 22px; transition: border-color .15s;
+        }
+        .contact-item:hover { border-color: var(--accent); }
+        .contact-item b { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--text-3); font-weight: 500; margin-bottom: 8px; }
+        .contact-item a { font-family: var(--mono); font-size: 15px; color: var(--text); }
+        .contact-item a:hover { color: var(--accent); }
 
         /* ---------- Footer ---------- */
-        .footer { margin-top: 56px; padding: 32px 0 40px; border-top: 1px solid var(--line); text-align: center; }
-        .footer p { font-size: 13px; color: var(--ink-3); }
+        .footer { margin-top: 64px; padding: 30px 0 40px; border-top: 1px solid var(--border); text-align: center; }
+        .footer p { font-family: var(--mono); font-size: 12px; color: var(--text-3); }
         .footer p + p { margin-top: 6px; }
 
+        /* ---------- Reveal ---------- */
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+
         /* ---------- Responsive ---------- */
-        @media (max-width: 760px) {
+        @media (max-width: 820px) {
             .nav-links {
                 position: fixed; top: var(--nav-h); left: 0; right: 0;
                 flex-direction: column; align-items: stretch; gap: 0;
-                background: var(--paper); padding: 8px 24px 16px;
-                border-bottom: 1px solid var(--line);
-                display: none;
+                background: #0a0e13; padding: 8px 24px 16px;
+                border-bottom: 1px solid var(--border); display: none;
             }
             .nav-links.open { display: flex; }
-            .nav-links a { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+            .nav-links a { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
             .nav-links a.active::after { display: none; }
             .nav-burger { display: flex; }
-            .masthead { padding: 48px 0 40px; }
-            .masthead-inner { flex-direction: column-reverse; gap: 24px; }
-            .name { font-size: 40px; }
+            .hero { padding-top: 48px; }
+            .hero-inner { flex-direction: column-reverse; gap: 32px; }
+            .nameplate { width: 100%; max-width: 320px; }
+            .nameplate .np-body { flex-direction: row; align-items: center; gap: 16px; text-align: left; }
+            .nameplate .np-body img, .nameplate .np-body .monogram { margin-bottom: 0; }
+            .nameplate .np-status { justify-content: flex-start; }
+            .about-meta, .skill-groups { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
             .project-time { margin-left: 0; }
         }
     </style>
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
     <!-- Nav -->
     <nav class="nav">
         <div class="nav-inner">
-            <a href="#top" class="nav-name">赵英琦</a>
+            <a href="#top" class="nav-logo"><span class="led"></span>赵英琦</a>
             <button class="nav-burger" id="nav-burger" aria-label="菜单"><span></span><span></span><span></span></button>
             <ul class="nav-links" id="nav-links">
                 <li><a href="#about">关于</a></li>
@@ -207,39 +292,60 @@
     </nav>
 
     <main class="wrap" id="top">
-        <!-- Masthead -->
-        <header class="masthead">
-            <div class="masthead-inner">
-                <div>
-                    <p class="eyebrow">机器人工程 · 本科 · 2027 届</p>
+        <!-- Hero -->
+        <header class="hero">
+            <div class="hero-inner">
+                <div class="hero-main">
+                    <p class="eyebrow">> 2027届 · 机器人工程 · 本科</p>
                     <h1 class="name">赵英琦</h1>
                     <p class="role">嵌入式开发工程师</p>
                     <p class="tagline">专注 STM32 / MSPM0 底层驱动、PID 运动控制与机器视觉，独立完成 ESP32 端云语音系统开发。</p>
-                    <p class="contact-line">
-                        <a href="tel:18108518572">电话 18108518572</a>
-                        <span class="sep">·</span>
-                        <a href="mailto:2019855865@qq.com">邮箱 2019855865@qq.com</a>
-                    </p>
+                    <div class="contact-line">
+                        <a href="tel:18108518572"><span class="k">TEL</span>18108518572</a>
+                        <a href="mailto:2019855865@qq.com"><span class="k">MAIL</span>2019855865@qq.com</a>
+                    </div>
                 </div>
-                <figure class="portrait">
-                    <span class="monogram">赵</span>
-                    <img src="assets/photo.jpg" alt="赵英琦" onerror="this.style.display='none';this.previousElementSibling.style.display='flex';">
-                </figure>
+                <div class="nameplate">
+                    <div class="np-top">
+                        <span class="dots"><i></i><i></i><i></i></span>
+                        <span class="np-id">ID · 2027</span>
+                    </div>
+                    <div class="np-body">
+                        <span class="monogram">赵</span>
+                        <img src="assets/photo.jpg" alt="赵英琦" onerror="this.style.display='none';this.previousElementSibling.style.display='flex';">
+                        <div>
+                            <div class="np-name">赵英琦</div>
+                            <div class="np-role">EMBEDDED ENGINEER</div>
+                        </div>
+                    </div>
+                    <div class="np-status"><span class="led"></span> 求职中 · 2027 届</div>
+                </div>
+            </div>
+            <div class="wave-divider">
+                <svg viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+                    <polyline fill="none" stroke="#3ecf8e" stroke-opacity="0.18" stroke-width="1.5"
+                        points="0,28 60,28 60,8 130,8 130,28 190,28 190,16 250,16 250,28 310,28 310,8 380,8 380,28 440,28 440,16 500,16 500,28 560,28 560,8 630,8 630,28 690,28 690,16 750,16 750,28 810,28 810,8 880,8 880,28 940,28 940,16 1000,16 1000,28 1060,28 1060,8 1130,8 1130,28 1200,28"/>
+                </svg>
             </div>
         </header>
 
         <!-- About -->
         <section id="about">
-            <div class="section-head"><h2>关于我</h2><div class="rule"></div></div>
-            <p class="about-text">
+            <div class="section-head reveal"><span class="no">01</span><h2>关于我</h2><span class="line"></span></div>
+            <p class="about-text reveal">
                 具备流利的英语口语能力，能与英语母语者进行无障碍沟通及专业领域深入交流。治学严谨，拥有扎实的嵌入式系统开发与控制算法基础，并通过学科竞赛与项目实践积累了丰富的实战经验。团队协作意识突出，善于在跨职能环境中推动目标高效达成。
             </p>
+            <div class="about-meta">
+                <div class="meta-cell reveal"><div class="m-k">FOCUS</div><div class="m-v">嵌入式底层 · 运动控制</div></div>
+                <div class="meta-cell reveal"><div class="m-k">STACK</div><div class="m-v">STM32 · MSPM0 · ESP32</div></div>
+                <div class="meta-cell reveal"><div class="m-k">LANG</div><div class="m-v">CET-6 · 流利口语</div></div>
+            </div>
         </section>
 
         <!-- Education -->
         <section id="education">
-            <div class="section-head"><h2>教育经历</h2><div class="rule"></div></div>
-            <div class="edu-card">
+            <div class="section-head reveal"><span class="no">02</span><h2>教育经历</h2><span class="line"></span></div>
+            <div class="edu-card reveal">
                 <div class="edu-top">
                     <div>
                         <div class="edu-school">青岛理工大学</div>
@@ -248,7 +354,7 @@
                     <div class="edu-time">2023/09 — 2027/07</div>
                 </div>
                 <div class="edu-courses">
-                    <div class="sub">主修课程</div>
+                    <div class="sub">// 主修课程</div>
                     <div class="tags">
                         <span class="tag">微型计算机系统</span>
                         <span class="tag">Linux 操作系统</span>
@@ -263,30 +369,34 @@
 
         <!-- Skills -->
         <section id="skills">
-            <div class="section-head"><h2>专业技能</h2><div class="rule"></div></div>
-            <div class="skill-block">
+            <div class="section-head reveal"><span class="no">03</span><h2>专业技能</h2><span class="line"></span></div>
+            <div class="skill-block reveal">
                 <p>精通 <b>STM32F4 / F7 / G4 / H7、C51 及 TI MSPM0</b> 系列微控制器的架构设计与底层驱动开发；熟练运用 <b>Keil MDK v5、STM32CubeMX</b> 等开发环境，高效完成嵌入式项目的构建、调试与优化；深入掌握 <b>I2C、USART、SPI</b> 等通信协议栈及数据链路层设计，具备协议定制与性能调优能力；拥有扎实的硬件调试功底，能够独立解析原理图与 PCB 布局，并借助 <b>示波器、逻辑分析仪</b> 完成信号完整性与电参数验证，确保系统稳定可靠。</p>
                 <p>熟练运用 <b>VibeCoding</b> 开展嵌入式项目开发，借助 AI 编程工具辅助需求拆解、代码生成与问题定位，提升代码质量与研发效率；熟练使用 <b>Git / GitHub</b> 进行版本管理与协同开发，能够基于 <b>VS Code</b> 完成嵌入式全流程工程开发调试。</p>
             </div>
-            <div class="skill-tags tags">
-                <span class="tag">STM32F4/F7/G4/H7</span>
-                <span class="tag">C51</span>
-                <span class="tag">TI MSPM0</span>
-                <span class="tag">ESP32-S3</span>
-                <span class="tag">ESP-IDF</span>
-                <span class="tag">I2C</span>
-                <span class="tag">USART</span>
-                <span class="tag">SPI</span>
-                <span class="tag">PID 控制</span>
-                <span class="tag">OpenMV</span>
-                <span class="tag">Python</span>
-                <span class="tag">Keil MDK v5</span>
-                <span class="tag">STM32CubeMX</span>
-                <span class="tag">示波器 / 逻辑分析仪</span>
-                <span class="tag">Git / GitHub</span>
-                <span class="tag">VS Code</span>
+            <div class="skill-groups">
+                <div class="skill-group reveal">
+                    <h3><span class="led green"></span><span class="g-cn">精通</span></h3>
+                    <div class="items">
+                        <span>STM32F4/F7/G4/H7</span><span>C51</span><span>TI MSPM0</span>
+                        <span>I2C</span><span>USART</span><span>SPI</span><span>硬件调试 / 信号完整性</span>
+                    </div>
+                </div>
+                <div class="skill-group reveal">
+                    <h3><span class="led amber"></span><span class="g-cn">熟练</span></h3>
+                    <div class="items">
+                        <span>Keil MDK v5</span><span>STM32CubeMX</span><span>ESP32-S3</span>
+                        <span>ESP-IDF</span><span>OpenMV</span><span>Python</span><span>PID 控制</span><span>VibeCoding</span>
+                    </div>
+                </div>
+                <div class="skill-group reveal">
+                    <h3><span class="led gray"></span><span class="g-cn">掌握</span></h3>
+                    <div class="items">
+                        <span>Git / GitHub</span><span>VS Code</span><span>Linux / Shell</span>
+                    </div>
+                </div>
             </div>
-            <div class="certs">
+            <div class="certs reveal">
                 <span class="cert">大学英语六级（CET-6）</span>
                 <span class="cert">大学英语四级（CET-4）</span>
             </div>
@@ -294,9 +404,9 @@
 
         <!-- Projects -->
         <section id="projects">
-            <div class="section-head"><h2>项目经历</h2><div class="rule"></div></div>
+            <div class="section-head reveal"><span class="no">04</span><h2>项目经历</h2><span class="line"></span></div>
 
-            <article class="project">
+            <article class="project reveal">
                 <div class="project-head">
                     <h3>基于 Claude Code 智能体开发 ESP32‑S3 端云智能语音对话系统</h3>
                     <span class="project-role">独立开发</span>
@@ -313,7 +423,7 @@
                 </div>
             </article>
 
-            <article class="project">
+            <article class="project reveal">
                 <div class="project-head">
                     <h3>简易自行瞄准装置</h3>
                     <span class="project-role">视觉模块和算法调试负责人</span>
@@ -329,7 +439,7 @@
                 </div>
             </article>
 
-            <article class="project">
+            <article class="project reveal">
                 <div class="project-head">
                     <h3>两轮自平衡自动行驶小车</h3>
                     <span class="project-role">主程序和算法调试负责人</span>
@@ -344,7 +454,7 @@
                 </div>
             </article>
 
-            <article class="project">
+            <article class="project reveal">
                 <div class="project-head">
                     <h3>基于图像识别技术的光点运动轨迹控制系统</h3>
                     <span class="project-role">控制系统开发和算法负责人</span>
@@ -363,15 +473,15 @@
 
         <!-- Competitions -->
         <section id="competitions">
-            <div class="section-head"><h2>竞赛经历</h2><div class="rule"></div></div>
-            <div class="comp-entry">
+            <div class="section-head reveal"><span class="no">05</span><h2>竞赛经历</h2><span class="line"></span></div>
+            <div class="comp-entry reveal">
                 <span class="comp-award">三等奖</span>
                 <div>
                     <div class="comp-name">全国大学生电子设计竞赛 · 山东赛区</div>
                     <div class="comp-detail">2025/07 — 2025/08</div>
                 </div>
             </div>
-            <div class="comp-entry">
+            <div class="comp-entry reveal">
                 <span class="comp-award">二等奖</span>
                 <div>
                     <div class="comp-name">青岛理工大学第二届电子设计竞赛</div>
@@ -382,23 +492,23 @@
 
         <!-- Contact -->
         <section id="contact">
-            <div class="section-head"><h2>联系我</h2><div class="rule"></div></div>
-            <div class="contact-items">
-                <div class="contact-item">
-                    <b>电话</b>
-                    <a href="tel:18108518572">18108518572</a>
-                </div>
-                <div class="contact-item">
-                    <b>邮箱</b>
-                    <a href="mailto:2019855865@qq.com">2019855865@qq.com</a>
-                </div>
+            <div class="section-head reveal"><span class="no">06</span><h2>联系我</h2><span class="line"></span></div>
+            <div class="contact-grid">
+                <a class="contact-item reveal" href="tel:18108518572">
+                    <b>TEL / 电话</b>
+                    <span>18108518572</span>
+                </a>
+                <a class="contact-item reveal" href="mailto:2019855865@qq.com">
+                    <b>MAIL / 邮箱</b>
+                    <span>2019855865@qq.com</span>
+                </a>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-        <p>© 2026 赵英琦</p>
-        <p>嵌入式开发 · 机器人工程</p>
+        <p>© 2026 赵英琦 · 嵌入式开发工程师</p>
+        <p>STM32 / MSPM0 / ESP32 · PID · 机器视觉</p>
     </footer>
 
     <script>
@@ -435,6 +545,19 @@
         }
         window.addEventListener('scroll', spy, { passive: true });
         spy();
+
+        /* Reveal on scroll */
+        var revealEls = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+                });
+            }, { threshold: 0.12 });
+            revealEls.forEach(function (el) { io.observe(el); });
+        } else {
+            revealEls.forEach(function (el) { el.classList.add('visible'); });
+        }
     })();
     </script>
 </body>
